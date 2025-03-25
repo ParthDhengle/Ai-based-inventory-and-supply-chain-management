@@ -6,39 +6,56 @@ import "./DealerLanding.css"
 
 function DealerLanding() {
   const [dealerInfo, setDealerInfo] = useState({
-    name: "John Doe",
-    company: "Global Distribution Inc.",
-    shops: [
-      { id: 1, name: "Electronics Hub", location: "Downtown", domain: "Electronics" },
-      { id: 2, name: "Fashion Center", location: "Uptown", domain: "Fashion" },
-      { id: 3, name: "Grocery Mart", location: "Midtown", domain: "Grocery" },
-    ],
+    name: "",
+    company: "",
+    shops: [],
     stats: {
-      totalShops: 3,
-      totalProducts: 1250,
-      avgAccuracy: 92.5,
-      lastPrediction: "2023-06-15",
+      totalShops: 0,
+      totalProducts: 0,
+      avgAccuracy: 0,
+      lastPrediction: "",
     },
-  })
+  });
 
-  // In a real app, you would fetch dealer info from the backend
   useEffect(() => {
-    // Simulating API call
     const fetchDealerInfo = async () => {
       try {
-        // const response = await fetch(`http://localhost:8000/dealer/${localStorage.getItem('dealerId')}`);
-        // const data = await response.json();
-        // setDealerInfo(data);
+        const dealerId = localStorage.getItem('dealerId');
+        if (!dealerId) {
+          console.error("No dealerId found in localStorage");
+          return;
+        }
 
-        // Using mock data for now
-        console.log("Dealer dashboard loaded with mock data")
+        const dealerResponse = await fetch(`http://localhost:8000/dealer/${dealerId}`);
+        if (!dealerResponse.ok) {
+          throw new Error(`Failed to fetch dealer info: ${dealerResponse.statusText}`);
+        }
+        const dealerData = await dealerResponse.json();
+
+        const shopsResponse = await fetch(`http://localhost:8000/dealer/${dealerId}/shops`);
+        if (!shopsResponse.ok) {
+          throw new Error(`Failed to fetch shops: ${shopsResponse.statusText}`);
+        }
+        const shopsData = await shopsResponse.json();
+
+        setDealerInfo({
+          name: dealerData.name,
+          company: dealerData.company,
+          shops: shopsData,
+          stats: dealerData.stats || {
+            totalShops: shopsData.length,
+            totalProducts: shopsData.reduce((acc, shop) => acc + (shop.productCount || 0), 0),
+            avgAccuracy: 92.5, // Adjust as needed
+            lastPrediction: "2023-06-15", // Adjust as needed
+          },
+        });
       } catch (error) {
-        console.error("Error fetching dealer info:", error)
+        console.error("Error fetching dealer info:", error);
       }
-    }
+    };
 
-    fetchDealerInfo()
-  }, [])
+    fetchDealerInfo();
+  }, []);
 
   return (
     <div className="dealer-landing">
@@ -150,8 +167,7 @@ function DealerLanding() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default DealerLanding
-
+export default DealerLanding;
