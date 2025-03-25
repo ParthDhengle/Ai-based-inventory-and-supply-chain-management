@@ -5,9 +5,13 @@ psycopg2-binary
 python-dotenv
 bcrypt
 pandas
-numpy
+numpy==1.26.4
 scikit-learn
 joblib
 matplotlib
 email-validator
 python-multipart
+certifi
+protobuf>=3.20.3
+requests>=2.21.0
+wrapt>=1.11.0

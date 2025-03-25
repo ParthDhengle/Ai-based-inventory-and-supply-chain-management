@@ -40,64 +40,18 @@ const ShopkeeperDashboard = () => {
   const [timeRange, setTimeRange] = useState("week") // week, month, year
 
   useEffect(() => {
-    // In a real app, fetch dashboard data from API
-    // For demo purposes, we'll use mock data
     const fetchDashboardData = async () => {
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Mock dashboard data
-        const mockData = {
-          stats: {
-            totalSales: 12580.75,
-            salesGrowth: 12.5,
-            totalOrders: 156,
-            ordersGrowth: 8.2,
-            totalCustomers: 89,
-            customersGrowth: 15.3,
-            averageOrderValue: 80.65,
-            aovGrowth: 4.1,
-          },
-          salesData: {
-            week: {
-              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-              data: [1250, 1800, 1600, 2100, 1800, 2400, 1600],
-            },
-            month: {
-              labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-              data: [6500, 7800, 8200, 9100],
-            },
-            year: {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-              data: [12500, 13800, 14600, 15100, 16800, 18400, 19600, 21000, 22500, 23800, 25600, 28000],
-            },
-          },
-          top_products: [
-            { name: "Smartphone X", sales: 42, percentage: 25 },
-            { name: "Wireless Earbuds", sales: 38, percentage: 22 },
-            { name: "Smart Watch", sales: 25, percentage: 15 },
-            { name: "Laptop Pro", sales: 18, percentage: 11 },
-            { name: "Bluetooth Speaker", sales: 15, percentage: 9 },
-            { name: "Other Products", sales: 30, percentage: 18 },
-          ],
-          ordersByDay: {
-            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            data: [18, 25, 20, 30, 22, 28, 15],
-          },
+        try {
+            const response = await axios.get("http://localhost:8000/shopkeeper/dashboard");
+            setDashboardData(response.data);
+        } catch (err) {
+            setError("Failed to load dashboard data.");
+        } finally {
+            setIsLoading(false);
         }
-
-        setDashboardData(mockData)
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err)
-        setError("Failed to load dashboard data. Please try again later.")
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchDashboardData()
-  }, [])
+    };
+    fetchDashboardData();
+}, []);
 
   const handleTimeRangeChange = (range) => {
     setTimeRange(range)

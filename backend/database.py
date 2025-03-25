@@ -8,16 +8,12 @@ from bcrypt import hashpw, gensalt
 
 load_dotenv()
 
-# Use SQLite database file
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///supplyconnect.db")  # Default to local SQLite file if not set
-if not DATABASE_URL.startswith("sqlite:///"):
-    raise ValueError("DATABASE_URL must be a SQLite URL (e.g., sqlite:///supplyconnect.db). Check your .env file.")
 
-# SQLite-specific engine configuration
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})  # Required for SQLite in multi-threaded apps
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///supplyconnect.db")
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-
 # Dealer Table
 class Dealer(Base):
     __tablename__ = "dealers"

@@ -36,22 +36,21 @@ function Inventory() {
   const handleFileChange = (event, shopIndex) => {
     const file = event.target.files[0]
     if (!file) {
-      alert("No file selected")
-      return
+        alert("No file selected")
+        return
     }
     if (!file.name.endsWith(".csv")) {
-      alert("Please upload a CSV file")
-      return
+        alert("Please upload a CSV file")
+        return
     }
     if (file.size === 0) {
-      alert("Uploaded file is empty")
-      return
+        alert("Uploaded file is empty")
+        return
     }
-
-    console.log("Selected file for Shop", shopIndex + 1, ":", file.name, "Size:", file.size)
+    alert("Ensure your CSV includes: Historical_Sales, Promotion, Day_of_Week, Month, Product_ID, Demand (null for future periods)")
     setFileData((prev) => ({ ...prev, [shopIndex]: file }))
-    setPredictionData((prev) => ({ ...prev, [shopIndex]: [] })) // Reset predictions when new file is uploaded
-  }
+    setPredictionData((prev) => ({ ...prev, [shopIndex]: [] }))
+}
 
   const handlePredict = async (shopIndex) => {
     const file = fileData[shopIndex]
