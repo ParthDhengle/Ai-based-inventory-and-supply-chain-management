@@ -1,4 +1,4 @@
-#!/home/parth-dhengle/Documents/GitHub/bits.new/binary-fetch-main/backend/venv/bin/python3
+#!/home/parth-dhengle/Documents/GitHub/Ai-based-inventory-and-supply-chain-management/backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
