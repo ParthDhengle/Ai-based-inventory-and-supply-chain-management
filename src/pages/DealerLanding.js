@@ -6,7 +6,7 @@ import "./DealerLanding.css"
 
 function DealerLanding() {
   const [dealerInfo, setDealerInfo] = useState({
-    name: "",
+    name: localStorage.getItem('dealerName') || "", // Use name from localStorage as fallback
     company: "",
     shops: [],
     stats: {
@@ -16,14 +16,17 @@ function DealerLanding() {
       lastPrediction: "",
     },
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDealerInfo = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
         const dealerId = localStorage.getItem('dealerId');
         if (!dealerId) {
-          console.error("No dealerId found in localStorage");
-          return;
+          throw new Error("No dealerId found in localStorage");
         }
 
         const dealerResponse = await fetch(`http://localhost:8000/dealer/${dealerId}`);
@@ -45,17 +48,33 @@ function DealerLanding() {
           stats: dealerData.stats || {
             totalShops: shopsData.length,
             totalProducts: shopsData.reduce((acc, shop) => acc + (shop.productCount || 0), 0),
-            avgAccuracy: 92.5, // Adjust as needed
-            lastPrediction: "2023-06-15", // Adjust as needed
+            avgAccuracy: 92.5,
+            lastPrediction: "2023-06-15",
           },
         });
       } catch (error) {
         console.error("Error fetching dealer info:", error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchDealerInfo();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading dealer information...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h1>Welcome, {dealerInfo.name}</h1>
+        <p>Error fetching additional data: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="dealer-landing">

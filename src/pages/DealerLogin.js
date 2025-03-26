@@ -31,6 +31,7 @@ const DealerLogin = () => {
 
       // Store dealer ID in localStorage
       localStorage.setItem("dealerId", response.data.dealer_id)
+      localStorage.setItem("dealerName", response.data.name)
 
       // Redirect to dealer inventory page
       navigate("/dealer/inventory")

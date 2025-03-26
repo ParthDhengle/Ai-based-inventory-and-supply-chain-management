@@ -59,14 +59,14 @@ async def dealer_login(login: Login, db: Session = Depends(get_db)):
     dealer = db.query(Dealer).filter(Dealer.email == login.email).first()
     if not dealer or not checkpw(login.password.encode('utf-8'), dealer.password_hash.encode('utf-8')):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"message": "Login successful", "dealer_id": dealer.dealer_id}
+    return {"message": "Login successful", "dealer_id": dealer.dealer_id, "name": dealer.name}
 
 @app.post("/shopkeeper/login")
 async def shopkeeper_login(login: Login, db: Session = Depends(get_db)):
     shopkeeper = db.query(Shopkeeper).filter(Shopkeeper.email == login.email).first()
     if not shopkeeper or not checkpw(login.password.encode('utf-8'), shopkeeper.password_hash.encode('utf-8')):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"message": "Login successful", "shopkeeper_id": shopkeeper.shopkeeper_id}
+    return {"message": "Login successful", "shopkeeper_id": shopkeeper.shopkeeper_id, "name": shopkeeper.name}
 
 @app.post("/dealer/signup")
 async def dealer_signup(signup: DealerSignup, db: Session = Depends(get_db)):

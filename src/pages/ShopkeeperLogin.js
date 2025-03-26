@@ -31,6 +31,7 @@ const ShopkeeperLogin = () => {
 
       // Store shopkeeper ID in localStorage
       localStorage.setItem("shopkeeperId", response.data.shopkeeper_id)
+      localStorage.setItem("shopkeeperName", response.data.name)
 
       // Redirect to home page (shopkeepers don't have direct inventory access)
       navigate("/")
